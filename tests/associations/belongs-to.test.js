@@ -650,6 +650,20 @@ describe('Associations(BelongsTo)', function() {
       });
     });
 
+    it('should include the new associated data by identifier of object nested without identifier', function(done) {
+      request.post({
+        url: test.baseUrl + '/usersWithoutFK',
+        json: {
+          username: 'ironman'
+        }
+      }, function(error, response, body) {
+        var result = _.isObject(body) ? body : JSON.parse(body);
+        expect(result.username).to.be.eql('ironman');
+        expect(result).to.not.contain.key('address_id');
+        done();
+      });
+    });
+
   });
 
 });
