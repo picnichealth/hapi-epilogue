@@ -24,7 +24,7 @@ describe('issue 107', function() {
           model: test.models.Channel,
           associations: true,
           attributes: ['id','name'],
-          endpoints: ['/api/channels', '/api/channels/:id']
+          endpoints: ['/api/channels', '/api/channels/{id}']
         });
 
         return Promise.all([

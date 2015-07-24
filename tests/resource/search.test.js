@@ -5,7 +5,8 @@ var Promise = require('bluebird'),
     expect = require('chai').expect,
     _ = require('lodash'),
     rest = require('../../lib'),
-    test = require('../support');
+    test = require('../support'),
+    Bluebird = require('bluebird');
 
 describe('Resource(search)', function() {
   before(function() {
@@ -64,7 +65,7 @@ describe('Resource(search)', function() {
 
   afterEach(function() {
     return test.clearDatabase()
-      .then(function() { return test.closeServer(); });
+      .then(function() { return Bluebird.fromCallback(function(cb) {test.server.stop(cb);}); });
   });
 
   [
@@ -150,7 +151,7 @@ describe('Resource(search)', function() {
       name: 'filter by boolean attribute',
       config: {
         model: function() { return test.models.Task; },
-        endpoints: ['/tasks', '/tasks/:id']
+        endpoints: ['/tasks', '/tasks/{id}']
       },
       extraQuery: 'finished=true',
       expectedResults: [
@@ -162,7 +163,7 @@ describe('Resource(search)', function() {
       name: 'filter by string attribute',
       config: {
         model: function() { return test.models.Task; },
-        endpoints: ['/tasks', '/tasks/:id']
+        endpoints: ['/tasks', '/tasks/{id}']
       },
       extraQuery: 'name=run',
       expectedResults: [
@@ -173,7 +174,7 @@ describe('Resource(search)', function() {
       name: 'filter by integer attribute',
       config: {
         model: function() { return test.models.Task; },
-        endpoints: ['/tasks', '/tasks/:id']
+        endpoints: ['/tasks', '/tasks/{id}']
       },
       extraQuery: 'priority=3',
       expectedResults: [
@@ -188,7 +189,7 @@ describe('Resource(search)', function() {
 
       var resourceConfig = _.defaults(testCase.config, {
         model: test.models.User,
-        endpoints: ['/users', '/users/:id']
+        endpoints: ['/users', '/users/{id}']
       });
 
       var testResource = rest.resource(resourceConfig);

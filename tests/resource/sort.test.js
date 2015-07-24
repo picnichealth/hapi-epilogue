@@ -5,7 +5,8 @@ var Promise = require('bluebird'),
     expect = require('chai').expect,
     _ = require('lodash'),
     rest = require('../../lib'),
-    test = require('../support');
+    test = require('../support'),
+    Bluebird = require('bluebird');
 
 describe('Resource(sort)', function() {
   before(function() {
@@ -45,13 +46,13 @@ describe('Resource(sort)', function() {
 
   afterEach(function() {
     return test.clearDatabase()
-      .then(function() { return test.closeServer(); });
+      .then(function() { return Bluebird.fromCallback(function(cb) {test.server.stop(cb);}); });
   });
 
   it('should sort with default options', function(done) {
     rest.resource({
       model: test.models.User,
-      endpoints: ['/users', '/users/:id']
+      endpoints: ['/users', '/users/{id}']
     });
 
     request.get({
@@ -69,7 +70,7 @@ describe('Resource(sort)', function() {
   it('should sort with custom param', function(done) {
     rest.resource({
       model: test.models.User,
-      endpoints: ['/users', '/users/:id'],
+      endpoints: ['/users', '/users/{id}'],
       sort: {
         param: 'orderby'
       }
@@ -90,7 +91,7 @@ describe('Resource(sort)', function() {
   it('should sort with restricted attributes', function(done) {
     rest.resource({
       model: test.models.User,
-      endpoints: ['/users', '/users/:id'],
+      endpoints: ['/users', '/users/{id}'],
       sort: {
         attributes: ['email']
       }
@@ -111,7 +112,7 @@ describe('Resource(sort)', function() {
   it('should sort with default sort criteria', function(done) {
     rest.resource({
       model: test.models.User,
-      endpoints: ['/users', '/users/:id'],
+      endpoints: ['/users', '/users/{id}'],
       sort: {
         default: "email"
       }
@@ -132,7 +133,7 @@ describe('Resource(sort)', function() {
   it('should sort with query overriding default sort criteria', function(done) {
     rest.resource({
       model: test.models.User,
-      endpoints: ['/users', '/users/:id'],
+      endpoints: ['/users', '/users/{id}'],
       sort: {
         default: "-email"
       }
@@ -153,7 +154,7 @@ describe('Resource(sort)', function() {
   it('should fail sorting with a restricted attribute', function(done) {
     rest.resource({
       model: test.models.User,
-      endpoints: ['/users', '/users/:id'],
+      endpoints: ['/users', '/users/{id}'],
       sort: {
         attributes: ['email']
       }
@@ -173,7 +174,7 @@ describe('Resource(sort)', function() {
   it('should fail sorting with multiple restricted attributes', function(done) {
     rest.resource({
       model: test.models.User,
-      endpoints: ['/users', '/users/:id'],
+      endpoints: ['/users', '/users/{id}'],
       sort: {
         attributes: ['email']
       }

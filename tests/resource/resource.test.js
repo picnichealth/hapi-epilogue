@@ -6,7 +6,8 @@ var Promise = require('bluebird'),
     _ = require('lodash'),
     rest = require('../../lib'),
     errors = rest.Errors,
-    test = require('../support');
+    test = require('../support'),
+    Bluebird = require('bluebird');
 
 describe('Resource(basic)', function() {
   before(function() {
@@ -50,12 +51,12 @@ describe('Resource(basic)', function() {
         rest.initialize({ app: test.app, sequelize: test.Sequelize });
         test.userResource = rest.resource({
           model: test.models.User,
-          endpoints: ['/users', '/users/:id']
+          endpoints: ['/users', '/users/{id}']
         });
 
         test.userResourceWithExclude = rest.resource({
           model: test.models.User,
-          endpoints: ['/usersWithExclude', '/usersWithExclude/:id'],
+          endpoints: ['/usersWithExclude', '/usersWithExclude/{id}'],
           excludeAttributes: [ 'email' ]
         });
 
@@ -72,7 +73,7 @@ describe('Resource(basic)', function() {
 
   afterEach(function() {
     return test.clearDatabase()
-      .then(function() { test.closeServer(); });
+      .then(function() { return Bluebird.fromCallback(function(cb) {test.server.stop(cb);}); });
   });
 
   // TESTS
@@ -97,7 +98,7 @@ describe('Resource(basic)', function() {
         model: test.models.Person
       });
 
-      expect(resource.endpoints).to.eql({ plural: '/people', singular: '/people/:id' });
+      expect(resource.endpoints).to.eql({ plural: '/people', singular: '/people/{id}' });
     });
 
     it('should always transform includes to be objects with a model property', function() {
@@ -107,7 +108,7 @@ describe('Resource(basic)', function() {
       modelWithAssociation.belongsTo(test.models.User);
       var resourceWithIncludeAsObject = rest.resource({
         model: test.models.Person,
-        endpoints: ['/modelwithincludeobject', '/modelwithincludeobject/:id'],
+        endpoints: ['/modelwithincludeobject', '/modelwithincludeobject/{id}'],
         include:[{ model: test.models.User }]
       });
 
@@ -115,7 +116,7 @@ describe('Resource(basic)', function() {
 
       var resourceWithIncludeAsArray = rest.resource({
         model: test.models.Person,
-        endpoints: ['/modelwithincludearray', '/modelwithincludearray/:id'],
+        endpoints: ['/modelwithincludearray', '/modelwithincludearray/{id}'],
         include: [test.models.User]
       });
 
@@ -123,7 +124,7 @@ describe('Resource(basic)', function() {
 
       var resourceWithoutInclude = rest.resource({
         model: test.models.Person,
-        endpoints: ['/modelwithoutinclude', '/modelwithoutinclude/:id']
+        endpoints: ['/modelwithoutinclude', '/modelwithoutinclude/{id}']
       });
 
       expect(resourceWithoutInclude.include).to.eql([]);
@@ -131,8 +132,8 @@ describe('Resource(basic)', function() {
 
     it('should allow the user to override the default error handler', function(done) {
       test.userResource.controllers.create.error = function(req, res, err) {
-        res.status(418);
-        res.json({ message: "I'm a teapot" });
+        res.code(418);
+        res.source = { message: "I'm a teapot" };
       };
 
       test.userResource.create.write.before(function(req, res, context) {
@@ -254,7 +255,7 @@ describe('Resource(basic)', function() {
       }, function(err, response, body) {
         expect(response.statusCode).to.equal(404);
         var record = _.isObject(body) ? body : JSON.parse(body);
-        expect(record).to.contain.keys('message');
+        expect(record).to.contain.keys('errors');
         done();
       });
     });

@@ -1,12 +1,15 @@
 {
-  "name": "epilogue",
-  "description": "Create REST resources and controllers with Sequelize and Express or Restify",
+  "name": "hapi-prologue",
+  "description": "Create REST resources and controllers with Sequelize and Hapi",
   "version": "0.6.5",
   "author": "David Chester <dchester@shutterstock.com>",
   "contributors": [
     {
       "name": "Matt Broadstone",
       "email": "mbroadst@gmail.com"
+    },
+    {
+      "name": "Picnichealth Team"
     }
   ],
   "main": "lib/",
@@ -18,10 +21,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dchester/epilogue.git"
+    "url": "https://github.com/pyephyomaung/hapi-prologue.git"
   },
   "bugs": {
-    "url": "https://github.com/dchester/epilogue/issues"
+    "url": "https://github.com/pyephyomaung/hapi-prologue/issues"
   },
   "license": "MIT",
   "keywords": [
@@ -34,11 +37,14 @@
     "api"
   ],
   "dependencies": {
-    "bluebird": "^3.0.0",
+    "hapi": "~11.1.2",
     "inflection": "^1.7.1",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "merge-defaults": "^0.2.1",
+    "sqlite3": "^3.1.1"
   },
   "devDependencies": {
+    "bluebird": "^3.0.5",
     "body-parser": "^1.13.3",
     "chai": "^3.2.0",
     "express": "^4.13.3",
@@ -48,6 +54,6 @@
     "request": "^2.60.0",
     "restify": "^4.0.3",
     "sequelize": "^3.5.1",
-    "sqlite3": "^3.0.9"
+    "inflection": "^1.7.1"
   }
 }

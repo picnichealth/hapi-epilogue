@@ -55,7 +55,7 @@ describe('Associations(BelongsToMany)', function() {
 
         rest.resource({
           model: test.models.Person,
-          endpoints: ['/people', '/people/:id'],
+          endpoints: ['/people', '/people/{id}'],
           associations: true
         });
 
@@ -175,7 +175,7 @@ describe('Associations(BelongsToMany)', function() {
         url: test.baseUrl + '/hobbies/1/people'
       }, function(error, response, body) {
         expect(response.statusCode).to.equal(200);
-        var result = _.isObject(body) ? body : JSON.parse(body);
+          var result = _.isObject(body) ? body : JSON.parse(body);
         expect(result).to.eql([{
           "id": 1,
           "name": "Mr 1",

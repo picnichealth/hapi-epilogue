@@ -86,13 +86,13 @@ describe('Associations(BelongsTo)', function() {
 
         test.usersResource = rest.resource({
           model: test.models.User,
-          endpoints: ['/users', '/users/:id'],
+          endpoints: ['/users', '/users/{id}'],
           associations: true
         });
 
         rest.resource({
           model: test.models.User,
-          endpoints: ['/usersWithoutFK', '/usersWithoutFK/:id'],
+          endpoints: ['/usersWithoutFK', '/usersWithoutFK/{id}'],
           associations: {
             removeForeignKeys: true
           }
@@ -100,18 +100,18 @@ describe('Associations(BelongsTo)', function() {
 
         rest.resource({
           model: test.models.User,
-          endpoints: ['/usersWithoutInclude', '/usersWithoutInclude/:id']
+          endpoints: ['/usersWithoutInclude', '/usersWithoutInclude/{id}']
         });
 
         rest.resource({
           model: test.models.Person,
-          endpoints: ['/people', '/people/:id'],
+          endpoints: ['/people', '/people/{id}'],
           associations: true
         });
 
         rest.resource({
           model: test.models.Yuppie,
-          endpoints: ['/yuppies', '/yuppies/:id'],
+          endpoints: ['/yuppies', '/yuppies/{id}'],
           associations: true
         });
 
@@ -121,19 +121,21 @@ describe('Associations(BelongsTo)', function() {
             { model: test.models.Address, as: 'addy' },
             { model: test.models.Hobby, as: 'hobbies' }
           ],
-          endpoints: ['/personWithTwoIncludes', '/personWithTwoIncludes/:id']
+          endpoints: ['/personWithTwoIncludes', '/personWithTwoIncludes/{id}']
         });
 
         rest.resource({
           model: test.models.Address,
-          endpoints: ['/addresses', '/addresses/:id']
+          endpoints: ['/addresses', '/addresses/{id}']
         });
       });
   });
 
   afterEach(function() {
     return test.clearDatabase()
-      .then(function() { return test.closeServer(); });
+      .then(function() {
+        return test.closeServer();
+      });
   });
 
   // TESTS
@@ -655,7 +657,7 @@ describe('Associations(BelongsTo)', function() {
       rest.resource({
         model: test.models.User,
         include: [test.models.Address],
-        endpoints: ['/usersNotReloadInstances', '/usersNotReloadInstances/:id'],
+        endpoints: ['/usersNotReloadInstances', '/usersNotReloadInstances/{id}'],
         reloadInstances: false
       });
 

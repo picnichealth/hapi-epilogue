@@ -1,12 +1,9 @@
 'use strict';
 
-var Promise = require('bluebird'),
-    Sequelize = require('sequelize'),
-    http = require('http'),
-    express = require('express'),
-    bodyParser = require('body-parser'),
-    restify = require('restify'),
-    chai = require('chai');
+var Sequelize = require('sequelize'),
+    hapi = require('hapi'),
+    chai = require('chai'),
+    Bluebird = require('bluebird');
 
 var TestFixture = {
   models: {},
@@ -17,24 +14,16 @@ var TestFixture = {
   },
 
   initializeServer: function() {
-    if (process.env.USE_RESTIFY) {
-      TestFixture.server = TestFixture.app = restify.createServer();
-      TestFixture.server.use(restify.queryParser());
-      TestFixture.server.use(restify.bodyParser());
-    } else {
-      TestFixture.app = express();
-      TestFixture.app.use(bodyParser.json());
-      TestFixture.app.use(bodyParser.urlencoded({ extended: false }));
-      TestFixture.server = http.createServer(TestFixture.app);
-    }
+    TestFixture.server = TestFixture.app = new hapi.Server();
 
-    return new Promise(function(resolve, reject) {
-      TestFixture.server.listen(0, '127.0.0.1', function() {
-        TestFixture.baseUrl =
-          'http://' + TestFixture.server.address().address + ':' + TestFixture.server.address().port;
-        resolve();
-      });
+    TestFixture.server.connection({
+      host: 'localhost',
+      port: 8000
     });
+
+    TestFixture.baseUrl = TestFixture.server.info.uri;
+
+    return Bluebird.fromCallback(function(cb) { TestFixture.server.start(cb); });
   },
 
   clearDatabase: function() {
@@ -44,12 +33,7 @@ var TestFixture = {
   },
 
   closeServer: function() {
-    return new Promise(function(resolve, reject) {
-      TestFixture.server.close(function(err) {
-        if (!!err) return reject(err);
-        resolve();
-      });
-    });
+    return Bluebird.fromCallback(function(cb) { TestFixture.server.stop(cb); });
   }
 };
 

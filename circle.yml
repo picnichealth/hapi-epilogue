@@ -1,0 +1,14 @@
+machine:
+  environment:
+    NODE_ENV: circle
+  node:
+    version: 4.2.2
+
+test:
+  pre:
+    - mkdir $CIRCLE_TEST_REPORTS/mocha
+  override:
+    - npm test:
+        environment:
+          JUNIT_REPORT_PATH: $CIRCLE_TEST_REPORTS/mocha/junit.xml
+          JUNIT_REPORT_STACK: 1

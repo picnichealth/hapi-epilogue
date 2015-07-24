@@ -7,7 +7,8 @@ var Promise = require('bluebird'),
     rest = require('../../lib'),
     test = require('../support'),
     testMiddleware = require('./data/test-middleware'),
-    testMiddlewareBeforeAndAfter = require('./data/test-middleware-before-after');
+    testMiddlewareBeforeAndAfter = require('./data/test-middleware-before-after'),
+    Bluebird = require('bluebird');
 
 function verifyBeforeAndAfter(object) {
   expect(object.action).to.be.true;
@@ -33,8 +34,9 @@ describe('Middleware', function() {
 
   afterEach(function() {
     return test.clearDatabase()
-      .then(function() { return test.closeServer(); })
+      .then(function() { return Bluebird.fromCallback(function(cb) {test.server.stop(cb);})
       .then(function() { delete test.userResource; });
+    });
   });
 
   _.forOwn({
@@ -51,7 +53,7 @@ describe('Middleware', function() {
 
         test.userResource = rest.resource({
           model: test.models.User,
-          endpoints: ['/users', '/users/:id']
+          endpoints: ['/users', '/users/{id}']
         });
 
         test.userResource.use(middleware);

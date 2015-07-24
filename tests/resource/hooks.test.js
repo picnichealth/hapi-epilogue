@@ -6,7 +6,8 @@ var Promise = require('bluebird'),
     _ = require('lodash'),
     rest = require('../../lib'),
     inflection = require('inflection'),
-    test = require('../support');
+    test = require('../support'),
+    Bluebird = require('bluebird');
 
 test.hooks = {};
 ['create', 'update', 'destroy'].forEach(function(verb) {
@@ -115,14 +116,14 @@ describe('Resource(hooks)', function() {
         rest.initialize({ app: test.app, sequelize: test.Sequelize });
         rest.resource({
           model: test.models.User,
-          endpoints: ['/users', '/users/:id']
+          endpoints: ['/users', '/users/{id}']
         });
       });
   });
 
   afterEach(function() {
     return test.clearDatabase()
-      .then(function() { return test.closeServer(); });
+      .then(function() { return Bluebird.fromCallback(function(cb) {test.server.stop(cb);}); });
   });
 
   // TESTS

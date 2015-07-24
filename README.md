@@ -1,14 +1,14 @@
 [![Build Status](https://travis-ci.org/dchester/epilogue.svg?branch=master)](https://travis-ci.org/dchester/epilogue) [![Dependency Status](https://david-dm.org/dchester/epilogue.svg)](https://david-dm.org/dchester/epilogue)
 
-# Epilogue
+# Hapi Prologue
 
-Create flexible REST endpoints and controllers from [Sequelize](http://www.sequelizejs.com/) models in your [Express](http://expressjs.com/) or [Restify](https://github.com/restify/node-restify) app.
+Create flexible REST endpoints and controllers from [Sequelize](http://www.sequelizejs.com/) models in your [Hapi](http://hapijs.com/) app in Node.
 
 ### Getting Started
 ```javascript
-var Sequelize = require('sequelize'),
-    epilogue = require('epilogue'),
-    http = require('http');
+var sequelize = require('sequelize'),
+    hapi = require('hapi'),
+    epilogue = require(hapi-epilogue');
 
 // Define your models
 var database = new Sequelize('database', 'root', 'password');
@@ -18,22 +18,7 @@ var User = database.define('User', {
 });
 
 // Initialize server
-var server, app;
-if (process.env.USE_RESTIFY) {
-  var restify = require('restify');
-
-  app = server = restify.createServer()
-  app.use(restify.queryParser());
-  app.use(restify.bodyParser());
-} else {
-  var express = require('express'),
-      bodyParser = require('body-parser');
-
-  var app = express();
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: false }));
-  server = http.createServer(app);
-}
+var server = new hapi.Server();
 
 // Initialize epilogue
 epilogue.initialize({
@@ -154,7 +139,7 @@ var users = rest.resource({
 users.use(restMiddleware);
 ```
 
-Epilogue middleware also supports bundling in extra resource configuration by specifying
+Hapi Prologue middleware also supports bundling in extra resource configuration by specifying
 an "extraConfiguration" member of the middleware like so:
 
 ```javascript

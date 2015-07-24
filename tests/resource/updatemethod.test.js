@@ -5,7 +5,8 @@ var Promise = require('bluebird'),
     expect = require('chai').expect,
     _ = require('lodash'),
     rest = require('../../lib'),
-    test = require('../support');
+    test = require('../support'),
+    Bluebird = require('bluebird');
 
 describe('Resource(updateMethod)', function() {
   before(function() {
@@ -25,7 +26,7 @@ describe('Resource(updateMethod)', function() {
 
   afterEach(function() {
     return test.clearDatabase()
-      .then(function() { return test.closeServer(); });
+      .then(function() { return Bluebird.fromCallback(function(cb) {test.server.stop(cb);}); });
   });
 
   // TESTS
@@ -39,7 +40,7 @@ describe('Resource(updateMethod)', function() {
 
       rest.resource({
         model: test.models.User,
-        endpoints: ['/users', '/users/:id']
+        endpoints: ['/users', '/users/{id}']
       });
 
       var userData = { username: 'jamez', email: 'jamez@gmail.com' };
@@ -76,7 +77,7 @@ describe('Resource(updateMethod)', function() {
 
       rest.resource({
         model: test.models.User,
-        endpoints: ['/users', '/users/:id']
+        endpoints: ['/users', '/users/{id}']
       });
 
       var userData = { username: 'jamez', email: 'jamez@gmail.com' };
@@ -113,7 +114,7 @@ describe('Resource(updateMethod)', function() {
 
       rest.resource({
         model: test.models.User,
-        endpoints: ['/users', '/users/:id']
+        endpoints: ['/users', '/users/{id}']
       });
 
       var userData = { username: 'jamez', email: 'jamez@gmail.com' };

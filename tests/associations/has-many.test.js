@@ -45,7 +45,7 @@ describe('Associations(HasMany)', function() {
 
         test.resource = rest.resource({
           model: test.models.User,
-          endpoints: ['/users', '/users/:id'],
+          endpoints: ['/users', '/users/{id}'],
           associations: true
         });
 

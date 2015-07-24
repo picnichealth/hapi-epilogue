@@ -5,7 +5,8 @@ var Promise = require('bluebird'),
     expect = require('chai').expect,
     _ = require('lodash'),
     rest = require('../../lib'),
-    test = require('../support');
+    test = require('../support'),
+    Bluebird = require('bluebird');
 
 describe('Resource(pagination)', function() {
   before(function() {
@@ -47,7 +48,7 @@ describe('Resource(pagination)', function() {
             rest.initialize({ app: test.app, sequelize: test.Sequelize });
             rest.resource(_.extend(suite.configuration, {
               model: test.models.User,
-              endpoints: ['/users', '/users/:id']
+              endpoints: ['/users', '/users/{id}']
             }));
 
             test.userlist = [
@@ -62,9 +63,9 @@ describe('Resource(pagination)', function() {
           });
       });
 
-      after(function() {
+      afterEach(function() {
         return test.clearDatabase()
-          .then(function() { test.closeServer(); });
+          .then(function() { return Bluebird.fromCallback(function(cb) {test.server.stop(cb);}); });
       });
 
       it('should list records with no criteria', function(done) {

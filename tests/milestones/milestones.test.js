@@ -8,7 +8,8 @@ var Promise = require('bluebird'),
     test = require('../support'),
     errors = require('../../lib/Errors'),
     RequestCompleted = errors.RequestCompleted,
-    EpilogueError = errors.EpilogueError;
+    EpilogueError = errors.EpilogueError,
+    Bluebird = require('bluebird');
 
 describe('Milestones', function() {
   before(function() {
@@ -32,17 +33,15 @@ describe('Milestones', function() {
 
         test.userResource = rest.resource({
           model: test.models.User,
-          endpoints: ['/users', '/users/:id']
+          endpoints: ['/users', '/users/{id}']
         });
       });
   });
 
   afterEach(function() {
     return test.clearDatabase()
-      .then(function() { return test.closeServer(); })
-      .then(function() {
-        delete test.userResource;
-      });
+      .then(function() { return Bluebird.fromCallback(function(cb) {test.server.stop(cb);}); })
+      .then(function() { delete test.userResource; });
   });
 
   // TESTS
@@ -143,8 +142,8 @@ describe('Milestones', function() {
     }
 
     function setResponse(res) {
-      res.status(420);
-      res.json({test: 'test'});
+      res.code(420);
+      res.source = {test: 'test'};
     }
 
     it('should support running as a function', function(done) {
@@ -352,8 +351,8 @@ describe('Milestones', function() {
     it('should allow error messages to be changed before send', function(done) {
       var expectedBody = 'Expected Body';
       test.userResource.controllers.create.error = function(req, res, err) {
-        res.status(400);
-        res.send(expectedBody);
+        res.code(400);
+        res.source = expectedBody;
       };
 
       request.post({
