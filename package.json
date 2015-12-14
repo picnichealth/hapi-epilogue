@@ -1,5 +1,5 @@
 {
-  "name": "hapi-prologue",
+  "name": "hapi-epilogue",
   "description": "Create REST resources and controllers with Sequelize and Hapi",
   "version": "0.6.5",
   "author": "David Chester <dchester@shutterstock.com>",
@@ -21,10 +21,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pyephyomaung/hapi-prologue.git"
+    "url": "https://github.com/pyephyomaung/hapi-epilogue.git"
   },
   "bugs": {
-    "url": "https://github.com/pyephyomaung/hapi-prologue/issues"
+    "url": "https://github.com/pyephyomaung/hapi-epilogue/issues"
   },
   "license": "MIT",
   "keywords": [

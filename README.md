@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/dchester/epilogue.svg?branch=master)](https://travis-ci.org/dchester/epilogue) [![Dependency Status](https://david-dm.org/dchester/epilogue.svg)](https://david-dm.org/dchester/epilogue)
 
-# Hapi Prologue
+# Hapi Epilogue
 
 Create flexible REST endpoints and controllers from [Sequelize](http://www.sequelizejs.com/) models in your [Hapi](http://hapijs.com/) app in Node.
 
@@ -18,7 +18,7 @@ var User = database.define('User', {
 });
 
 // Initialize server
-var server = new hapi.Server();
+var app = new hapi.Server();
 
 // Initialize epilogue
 epilogue.initialize({
@@ -139,7 +139,7 @@ var users = rest.resource({
 users.use(restMiddleware);
 ```
 
-Hapi Prologue middleware also supports bundling in extra resource configuration by specifying
+Hapi Epilogue middleware also supports bundling in extra resource configuration by specifying
 an "extraConfiguration" member of the middleware like so:
 
 ```javascript
